@@ -21,7 +21,7 @@ def main():
             current_prime=state["current_prime"],
             filename=filename
         )
-    build_video()
+    build_gif()
 
 def sieve(n,numbers,prime_flag):
     states = []
@@ -88,6 +88,16 @@ def build_video(output_name="sieve_animation.mp4", fps=1):
             writer.append_data(image)
 
     print(f"Video created: {output_name}")
+
+def build_gif(output_name="sieve_animation.gif", fps=1):
+    frame_files = sorted(glob.glob("frame_*.png"))
+
+    with imageio.get_writer(output_name, mode="I", duration=1/fps) as writer:
+        for file in frame_files:
+            image = imageio.imread(file)
+            writer.append_data(image)
+
+    print(f"GIF created: {output_name}")
 
 if __name__ == "__main__":
     main()
