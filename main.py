@@ -1,7 +1,7 @@
 import math
 import matplotlib.pyplot as plt
 import glob
-import imageio.v2 as imageio
+import imageio.v3 as iio
 
 def main():
 
@@ -89,15 +89,27 @@ def build_video(output_name="sieve_animation.mp4", fps=1):
 
     print(f"Video created: {output_name}")
 
-def build_gif(output_name="sieve_animation.gif", fps=1):
+def build_gif(output_name="sieve_animation.gif", fps=1, end_hold_seconds=3):
     frame_files = sorted(glob.glob("frame_*.png"))
+    frames = []
 
-    with imageio.get_writer(output_name, mode="I", duration=1/fps) as writer:
-        for file in frame_files:
-            image = imageio.imread(file)
-            writer.append_data(image)
+    for idx, file in enumerate(frame_files):
+        image = iio.imread(file)
+        
+        # Add the frame
+        frames.append(image)
+        
+        # If it's the last frame, duplicate it to "hold" the result
+        if idx == len(frame_files) - 1:
+            for _ in range(fps * end_hold_seconds):
+                frames.append(image)
 
-    print(f"GIF created: {output_name}")
+    # duration is in milliseconds per frame. 
+    # If fps=1, duration=1000ms. If fps=2, duration=500ms.
+    ms_per_frame = int(1000 / fps)
+    
+    iio.imwrite(output_name, frames, duration=ms_per_frame, loop=0)
+    print(f"GIF created: {output_name} with {ms_per_frame}ms per frame")
 
 if __name__ == "__main__":
     main()

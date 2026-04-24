@@ -1,0 +1,1 @@
+This project is a beginner-friendly Python visualization of the Sieve of Eratosthenes. It demonstrates how prime numbers emerge by progressively marking composite numbers. The current version generates frame-by-frame images and exports them as a simple animation.
